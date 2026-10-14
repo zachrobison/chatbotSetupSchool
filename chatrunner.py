@@ -7,15 +7,21 @@ def PersonalityDecision(strnum):
         return ted_lasso_personality
     elif strnum == "2":
         return data_personality
+    else:
+        return ted_lasso_personality
 def model_decision(choice):
     if choice == "1":
         return GemmaModel
     elif choice == "2":
         return GemmaModel
+    else:
+        return GemmaModel
 def temperature_decision(choice):
     if choice == "1":
         return 1.8
     elif choice == "2":
+        return 1
+    else:
         return 1
 
 spongebob_personality = "youre spongebob"
@@ -41,27 +47,35 @@ model = Llama(
 
 print("AI: I'm ready!\n")
 
-userInput = input("What would you like to say to the AI?\nType exit to leave\n\n")
+while personality_choice != "3":
 
-while userInput != "exit":
+    userInput = input("What would you like to say to the AI?\nType switch to leave\n\n")
 
-    prompt = [
-        {
-            "role": "user",
-            "content": SYSTEM_PROMPT + "\n\n" + userInput
-        }
-    ]
+    while userInput != "switch":
 
-    result = model.create_chat_completion(
-        prompt,
-        max_tokens=256,
-        temperature = temperature_decision(personality_choice)
-    )
+        prompt = [
+            {
+                "role": "user",
+                "content": SYSTEM_PROMPT + "\n\n" + userInput
+            }
+        ]
 
-    response = result["choices"][0]["message"]["content"]
+        result = model.create_chat_completion(
+            prompt,
+            max_tokens=256,
+            temperature = temperature_decision(personality_choice)
+        )
 
-    print("\n"+response)
+        response = result["choices"][0]["message"]["content"]
 
-    userInput = input("\nYou can type exit to leave\n\n")
+        print("\n"+response)
 
-print("Good-bye! Thanks for chatting with me!")
+        userInput = input("\nYou can type switch to leave\n\n")
+        
+    personality_choice = input("would you like to be Ted Lasso(1) or Data(2) or exit?(3)\n")
+    
+    SYSTEM_PROMPT = PersonalityDecision(personality_choice)
+
+    MODEL_PATH = model_decision(personality_choice)
+
+print("\n\nGood-bye! Thanks for chatting with me!")
