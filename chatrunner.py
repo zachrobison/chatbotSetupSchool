@@ -1,12 +1,22 @@
 from llama_cpp import Llama
 
-MODEL_PATH = "./models/gemma-2-2b-it-Q4_K_M.gguf"
+
 
 def PersonalityDecision(strnum):
     if strnum == "1":
         return ted_lasso_personality
     elif strnum == "2":
         return data_personality
+def model_decision(choice):
+    if choice == "1":
+        return GemmaModel
+    elif choice == "2":
+        return GemmaModel
+def temperature_decision(choice):
+    if choice == "1":
+        return 1.8
+    elif choice == "2":
+        return 1
 
 spongebob_personality = "youre spongebob"
 
@@ -16,7 +26,11 @@ ted_lasso_personality = "You are Ted Lasso: extremely optimistic, friendly, funn
 
 personality_choice = input("would you like to be Ted Lasso(1) or Data(2)? ")
 
+GemmaModel = "./models/gemma-2-2b-it-Q4_K_M.gguf"
+
 SYSTEM_PROMPT = PersonalityDecision(personality_choice)
+
+MODEL_PATH = model_decision(personality_choice)
 
 model = Llama(
     model_path=MODEL_PATH,
@@ -41,7 +55,7 @@ while userInput != "exit":
     result = model.create_chat_completion(
         prompt,
         max_tokens=256,
-        temperature=0.2
+        temperature = temperature_decision(personality_choice)
     )
 
     response = result["choices"][0]["message"]["content"]
